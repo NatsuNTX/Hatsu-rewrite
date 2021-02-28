@@ -25,9 +25,9 @@ function LoadEvents(client) {
                 client.on(names, events.bind(null, client));
                 //Console
                 console.log(`Loading Event:${names}`);
-            })
+            });
         });
-    })
+    });
 }
 
 module.exports = LoadEvents
