@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "@discordjs/opus": "^0.4.0",
+    "bufferutil": "^4.0.3",
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
+    "erlpack": "github:discord/erlpack",
+    "libsodium-wrappers": "^0.7.9",
+    "nodemon": "^2.0.7",
+    "utf-8-validate": "^5.0.4",
+    "zlib-sync": "^0.1.7"
+  },
+  "name": "hatsuku-v2",
+  "version": "2.1.0",
+  "description": "Rewrite Version of Hatsuku Bot",
+  "main": "run.js",
+  "scripts": {
+    "test": "nodemon run.js",
+    "run": "node run.js"
+  },
+  "author": "NatsuX | NTX",
+  "license": "ISC"
+}
