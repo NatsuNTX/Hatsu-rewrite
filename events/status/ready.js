@@ -1,3 +1,8 @@
+/* Loggers */
+const logs = require('../../helper/logger/logger');
+const infolog = logs.getLogger("HatsuInfo");
+
+
 module.exports = (client) => {
-    console.log('Hatsu is Ready')
+    infolog.info("Hatsu is Ready")
 }

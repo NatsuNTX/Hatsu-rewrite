@@ -1,6 +1,11 @@
 //Libs
 const {promisify} = require('util');
 const readDir = promisify(require('fs').readdir);
+/* Logger Things */
+const log = require('../logger/logger');
+
+const debuglog = log.getLogger("HatsuDebug");
+const errorlog = log.getLogger("HatsuError");
 
 
 /**
@@ -14,17 +19,21 @@ function LoadEvents(client) {
 
     category.forEach(categoryName => {
         readDir(`./events/${categoryName}`, (err, files) => {
-            if (err) throw new Error('Something Wrong With Events Handler!'); //Error Handling
+            //Error Handling
+            if (err) {
+                errorlog.error(`Something Wrong With Events Handler!, ${err}`);
+                throw new Error('Something Wrong With Events Handler!');
+            }
             files.forEach(file => {
                 //If No Files with Extension ".js" than Ignore that
                 if (!file.endsWith(".js")) return;
-                const events = require(`../../events/${categoryName}/${file}`);
+                const eventCallback = require(`../../events/${categoryName}/${file}`);
                 //Get Files Name
                 const names = file.split(".")[0];
                 //Run Events FIles
-                client.on(names, events.bind(null, client));
+                client.on(names, eventCallback.bind(null, client));
                 //Console
-                console.log(`Loading Event:${names}`);
+                debuglog.debug(`Loading Event:${names}`);
             });
         });
     });
