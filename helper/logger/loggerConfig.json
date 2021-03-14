@@ -87,7 +87,7 @@
         "level": "error"
       },
       "HatsuDebug": {
-        "appenders": ["HatsuDebug", "HatsuConsoleDebug"],
+        "appenders": ["HatsuDebug"],
         "level": "debug"
       },
       "HatsuMusicDebug": {
