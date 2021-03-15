@@ -7,26 +7,31 @@ const logs = require('../helper/logger/logger');
 const infoLogs = logs.getLogger("HatsuInfo");
 
 /* Activity! */
+const activity = require('./activity/activity');
 
 /* This Where all Script need to Load At the same time with Client */
 const events = require('../helper/events/loadEvents');
 const DB = require('../helper/database/database');
+const commands = require('../helper/commands/Commands');
 
 /* Main Class */
 class hatsuku extends Client {
     constructor(opts, token) {
         super(opts);
         this.keys = token
-        this.loadHatsuku()
+        this.loadHatsukuAndAdditionalScript()
     }
-    async loadHatsuku() {
+    async loadHatsukuAndAdditionalScript() {
         //LOGIN
-        await this.login(this.keys)
+        await this.login(this.keys);
         //Load Script
-        events(this) //Events Handler
-        DB() //Database
+        events(this); //Events Handler
+        new commands(this);
+        DB(); //Database
         this.infoBot //INFO
+        activity(this); //Activity
     }
+
     /* INFO */
     get infoBot() {
         infoLogs.info(`Hatsuku is Login as ${this.user.username}`);
