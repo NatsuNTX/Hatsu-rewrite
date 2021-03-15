@@ -1,6 +1,6 @@
 module.exports = {
     name: "hello",
-    shortcut: ["hi"],
+    shortname: ["hi"],
     description: "Say FeedBack",
     execute(msg) {
         msg.reply("HI How are You?");
