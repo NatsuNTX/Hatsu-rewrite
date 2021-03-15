@@ -1,3 +1,6 @@
+//Stuff
+const embed = require('../../helper/Embed/NormalEmbed');
+const {Title,Description} = require('../../mastah/welcome.json');
 /* Logs */
 const logs = require('../../helper/logger/logger');
 const debugLogs = logs.getLogger("HatsuDebug");
@@ -19,6 +22,10 @@ module.exports = {
                 }
             }
         });
-        defaultChannel.send("Yeah iam IN!");
+        const welcome = new embed({
+            title: Title,
+            description: Description
+        });
+        defaultChannel.send(welcome);
     }
 }

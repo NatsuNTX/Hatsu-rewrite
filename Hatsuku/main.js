@@ -1,5 +1,6 @@
 //Libs
 const {Client} = require("discord.js"); //Import Client
+const SaveBotProfile = require('../img');
 
 /* Logger */
 const logs = require('../helper/logger/logger');
@@ -29,6 +30,7 @@ class hatsuku extends Client {
     /* INFO */
     get infoBot() {
         infoLogs.info(`Hatsuku is Login as ${this.user.username}`);
+        SaveBotProfile(this.user.displayAvatarURL({format:"png", size:1024}));
     }
 
 
