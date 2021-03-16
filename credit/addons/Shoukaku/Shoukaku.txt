@@ -1,0 +1,4 @@
+https://github.com/Deivu/Shoukaku/blob/master/README.md
+https://github.com/Deivu/Shoukaku
+LICENSE:
+https://github.com/Deivu/Shoukaku/blob/master/LICENSE

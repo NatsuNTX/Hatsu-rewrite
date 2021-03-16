@@ -1,0 +1,4 @@
+https://github.com/discordjs/discord.js/blob/master/README.md
+https://github.com/discordjs/discord.js
+LICENSE:
+https://github.com/discordjs/discord.js/blob/master/LICENSE
