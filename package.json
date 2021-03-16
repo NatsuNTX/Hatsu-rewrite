@@ -13,6 +13,7 @@
     "mongoose": "^5.11.18",
     "nodemon": "^2.0.7",
     "read-text-file": "^1.1.0",
+    "shoukaku": "github:Deivu/Shoukaku",
     "utf-8-validate": "^5.0.4",
     "zlib-sync": "^0.1.7"
   },

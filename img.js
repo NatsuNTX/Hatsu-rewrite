@@ -14,9 +14,6 @@ async function BotProfile(url) {
     const writeImage = fs.createWriteStream('BotProfile.png');
 
     imageData.data.pipe(writeImage);
-    fs.writeFile('ProfileLink.txt', this.proImage, (err) => {
-        if (err) throw new Error("Cannot Write Image Link!");
-    });
     writeImage.on('finish', () => console.log(clr.green("Save Bot Profile!")));
 
 }
