@@ -13,6 +13,9 @@ const activity = require('./activity/activity');
 const events = require('../helper/events/loadEvents');
 const DB = require('../helper/database/database');
 const commands = require('../helper/commands/Commands');
+const playerNodes = require('../helper/musicplayer/PlayerNodes');
+const playerHubs = require('../helper/musicplayer/PlayerHUB');
+const playerControl = require('../helper/musicplayer/controls/PlayerControls');
 
 /* Main Class */
 class hatsuku extends Client {
@@ -30,6 +33,12 @@ class hatsuku extends Client {
         DB(); //Database
         this.infoBot //INFO
         activity(this); //Activity
+
+        /* Lavalink */
+        const {PlayerNodeConfig,PlayerNodeOptions} = require('../mastah/PlayerNode.json');
+        this.playerNodes = new playerNodes(this,PlayerNodeConfig,PlayerNodeOptions);
+        this.playerHubs = new playerHubs(this);
+        this.playerControls = new playerControl(this);
     }
 
     /* INFO */

@@ -1,0 +1,17 @@
+{
+  "PlayerNodeConfig": [{
+    "auth": "natsu4455",
+    "host": "127.0.0.1",
+    "name": "localNode",
+    "port": 5871,
+    "secure": false
+  }],
+  "PlayerNodeOptions": {
+    "moveOnDisconnect": false,
+    "reconnectInterval": 25000,
+    "reconnectTries": 140,
+    "resTimeout": 35000,
+    "resumable": false,
+    "userAgent": "KIANA/2.10.5 (CN:NTX-MEI; HATSUKU-BOT)"
+  }
+}
