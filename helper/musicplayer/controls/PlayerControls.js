@@ -1,3 +1,8 @@
+/**
+ * This is Where All Music Command do they Stuff
+ * I Did this because to Make the Code inside Commands Files Short, cause the Old One
+ * is Very Messy or Maybe i Always write messy code cuz i'm still beginner :P
+ */
 class PlayerControls {
     constructor(client) {
         this.client = client;
@@ -32,10 +37,6 @@ class PlayerControls {
 
         //If User Input a URL
         if (isURL(this.tracks)) {
-            /*
-            //If the Link is not From this Service that Mean they Try to Play Music from Another Link
-            if (!this.tracks.includes(["youtube.com", "youtu.be", "soundcloud.com", "bandcamp.com", "twitch.tv"])) return this.msg.channel.send("Sorry., but for Now i Can Only Play Music from ***YouTube,SoundCloud,BandCamp and Twitch!***");
-             */
 
             //Change the Link to Lavalink Track Data
             const trackData = await lavaNodes.rest.resolve(this.tracks);
@@ -55,6 +56,8 @@ class PlayerControls {
             //Play the Tracks
             if (res) return res.playTracks();
         } else {
+            //Do i Need to Explain this code below?, because is Literally just a Same code as Above
+            //but a little bit modification
             const trackData = await lavaNodes.rest.resolve(this.tracks, 'youtube');
             if (!trackData) return this.msg.channel.send("I Can't Find Any Song From that Link");
             const firstTracks = trackData.tracks.shift();
@@ -87,5 +90,62 @@ class PlayerControls {
         player.queue.length = 0;
         await player.player.stopTrack();
     }
+
+    /**
+     *
+     * @param message Discord Message Module
+     * @param guildID GuildID
+     * @returns {Promise<*>}
+     */
+    async skipTracks(message, guildID) {
+        this.msg = message;
+        this.guild = guildID;
+
+        //Check if the User is In the Voice Channel
+        if (!this.msg.member.voice.channel) return this.msg.channel.send("You Need to Join VoiceChannel First Before Use this Commands!");
+        //Get Player that Currently Playing from PlayerHUB
+        const player = this.client.playerHubs.get(this.guild);
+        //If Player is Not Spawn in that Guild than Refuse the Request
+        if (!player) return this.msg.channel.send("I Can't Do That Because Nothing is Currently Playing");
+        //if User is Execute this Command from Another VoiceChannel than Refuse it
+        if(player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
+        //Stop the Current Track and Go to the Next Track
+        await this.msg.channel.send("**Skipping..**");
+        await player.player.stopTrack(); //just Stop and go to the next track Simple! (unless i got an error)
+    }
+
+    /**
+     * For Some Reason its Cuz Earrape even if set to 10%
+     * @param message Discord Message Module
+     * @param guildID Discord Guild ID
+     * @param volume Volume Numbers
+     * @returns {Promise<Message>}
+     */
+    async musicVolume(message, guildID, volume) {
+        this.msg = message
+        this.guild = guildID;
+        this.volume = volume;
+        
+        //Check if the User is In the Voice Channel
+        if (!this.msg.member.voice.channel) return this.msg.channel.send("You Need to Join VoiceChannel First Before Use this Commands!");
+        //Get Player that Currently Playing from PlayerHUB
+        const player = this.client.playerHubs.get(this.guild);
+        //If Player is Not Spawn in that Guild than Refuse the Request
+        if (!player) return this.msg.channel.send("I Can't Do That Because Nothing is Currently Playing");
+        //if User is Execute this Command from Another VoiceChannel than Refuse it
+        if(player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
+        //If User is Not Input a Number for Volume A.K.A just command say to input the Volume Numbers
+        if(!this.volume || isNaN(this.volume)) return this.msg.channel.send("**Please Type 10 - 250 to Set Volume**");
+        //Make Sure the Volume is Not to Low and to High
+        if(this.volume < 10) return this.msg.channel.send("You Want to Mute me?");
+        if(this.volume > 250) return this.msg.channel.send("Please Don't Earrape Someone :)");
+        //Change it to Number
+        const Vol = Number(this.volume);
+        //Adjust the Volume
+        await player.player.setVolume(Vol);
+        await this.msg.channel.send(`Set Volume to **${player.player.volume}%**`);
+
+    }
+    
 }
 module.exports = PlayerControls

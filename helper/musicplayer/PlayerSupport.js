@@ -25,8 +25,10 @@ class playerSupport {
             playerInfo.info(`Now Playing:${this.currentTrack.info.title} | Requested [${this.userMessage.author.username}]`);
             const PlayerStartEmbed = new embed({
                 title: ":cd: Music Player",
+                thumbnail: {url: this.client.user.displayAvatarURL({size:1024,format:"webp"})},
                 description: "Hatsu Music Player",
-                fields:[{name:":musical_note: Now Playing:", value: `**${this.currentTrack.info.title}** [${this.userMessage.author}]`}]
+                fields:[{name:":musical_note: Now Playing:", value: `**${this.currentTrack.info.title}** [${this.userMessage.author}]`},
+                    {name:":memo: Next Song:", value: `***${this.queue.length ? this.queue[0].info.title : "Opps.. i just see a dusk in this queue"}***`}]
             });
             this.textMessage.send(PlayerStartEmbed);
         });
