@@ -140,11 +140,49 @@ class PlayerControls {
         if(this.volume < 10) return this.msg.channel.send("You Want to Mute me?");
         if(this.volume > 250) return this.msg.channel.send("Please Don't Earrape Someone :)");
         //Change it to Number
-        const Vol = Number(this.volume);
+        const volumeInput = Number(this.volume);
+        //Change it to Decimal Number
+        const endVolume = volumeInput / 100;
         //Adjust the Volume
-        await player.player.setVolume(Vol);
-        await this.msg.channel.send(`Set Volume to **${player.player.volume}%**`);
+        await player.player.setVolume(endVolume);
+        await this.msg.channel.send(`Set Volume to **${volumeInput}%**`);
 
+    }
+    async pauseMusic(message, guildID) {
+        this.msg = message;
+        this.guild = guildID;
+
+        //Check if the User is In the Voice Channel
+        if (!this.msg.member.voice.channel) return this.msg.channel.send("You Need to Join VoiceChannel First Before Use this Commands!");
+        //Get Player that Currently Playing from PlayerHUB
+        const player = this.client.playerHubs.get(this.guild);
+        //If Player is Not Spawn in that Guild than Refuse the Request
+        if (!player) return this.msg.channel.send("I Can't Do That Because Nothing is Currently Playing");
+        //if User is Execute this Command from Another VoiceChannel than Refuse it
+        if(player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
+        //Check if Player is Already Pause or Not
+        if(player.player.paused) return this.msg.channel.send("The Player is **Already Paused!**");
+        //Paused the Current Track
+        await player.player.setPaused(true);
+        await this.msg.channel.send("Player is Now Paused!");
+    }
+    async resumeMusic(message,guildID) {
+        this.msg = message;
+        this.guild = guildID;
+
+        //Check if the User is In the Voice Channel
+        if (!this.msg.member.voice.channel) return this.msg.channel.send("You Need to Join VoiceChannel First Before Use this Commands!");
+        //Get Player that Currently Playing from PlayerHUB
+        const player = this.client.playerHubs.get(this.guild);
+        //If Player is Not Spawn in that Guild than Refuse the Request
+        if (!player) return this.msg.channel.send("I Can't Do That Because Nothing is Currently Playing");
+        //if User is Execute this Command from Another VoiceChannel than Refuse it
+        if(player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
+        //Check if Player is Already Resume or Not
+        if(!player.player.paused) return this.msg.channel.send("You Only can use this if the Player is Already Paused!");
+        //Resume the Player
+        await player.player.setPaused(false);
+        await this.msg.channel.send("Resuming Current Song!");
     }
     
 }
