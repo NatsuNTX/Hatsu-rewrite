@@ -29,7 +29,7 @@ class playerSupport {
                 description: "Hatsu Music Player",
                 fields:[{name:":musical_note: Now Playing:", value: `**${this.currentTrack.info.title}** [${this.userMessage.author}]`},
                     {name:":memo: Next Song:", value: `***${this.queue.length ? this.queue[0].info.title : "Opps.. i just see a dusk in this queue"}***`}],
-                footer:{text: `Volume:${this.player.filters.volume * 100}% | MusicServer:${this.player.voiceConnection.node.name}`, iconURL: this.client.user.displayAvatarURL}
+                footer:{text: `Volume:${this.player.filters.volume * 100}% | MusicServer:${this.player.voiceConnection.node.name}`, iconURL: this.client.user.displayAvatarURL({size:1024,format:"webp"})}
             });
             this.textMessage.send(PlayerStartEmbed);
         });

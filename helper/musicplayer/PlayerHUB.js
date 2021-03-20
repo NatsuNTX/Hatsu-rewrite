@@ -14,7 +14,7 @@ class playerHUB extends Map {
      * @param client Bot Client
      * @param opts Map Options
      */
-    constructor(client,opts) {
+    constructor(client, opts) {
         super(opts);
         this.client = client;
     }
@@ -61,4 +61,5 @@ class playerHUB extends Map {
     }
 
 }
+
 module.exports = playerHUB;

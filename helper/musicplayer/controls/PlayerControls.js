@@ -46,7 +46,7 @@ class PlayerControls {
 
             const firstTracks = tracks.shift();
 
-            const res = await this.client.playerHubs.playerHandle(this.msg,lavaNodes, firstTracks);
+            const res = await this.client.playerHubs.playerHandle(this.msg, lavaNodes, firstTracks);
 
             //If it is a Playlist than Get All Trackdata from that Playlist than Put it In the Queue
             if (type === "PLAYLIST") {
@@ -61,7 +61,7 @@ class PlayerControls {
             const trackData = await lavaNodes.rest.resolve(this.tracks, 'youtube');
             if (!trackData) return this.msg.channel.send("I Can't Find Any Song From that Link");
             const firstTracks = trackData.tracks.shift();
-            const res = await this.client.playerHubs.playerHandle(this.msg,lavaNodes, firstTracks);
+            const res = await this.client.playerHubs.playerHandle(this.msg, lavaNodes, firstTracks);
             await this.msg.channel.send(`:white_check_mark: Added **${firstTracks.info.title}**`);
             if (res) return res.playTracks();
         }
@@ -84,7 +84,7 @@ class PlayerControls {
         //If Player is Not Spawn in that Guild than Refuse the Request
         if (!player) return this.msg.channel.send("I Can't Do That Because Nothing is Currently Playing");
         //if User is Execute this Command from Another VoiceChannel than Refuse it
-        if(player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
+        if (player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
         //Clear all Queue,Stop the Music and than Leave
         await this.msg.channel.send(`:stop_button:**Stopping Current Songs**`);
         player.queue.length = 0;
@@ -108,7 +108,7 @@ class PlayerControls {
         //If Player is Not Spawn in that Guild than Refuse the Request
         if (!player) return this.msg.channel.send("I Can't Do That Because Nothing is Currently Playing");
         //if User is Execute this Command from Another VoiceChannel than Refuse it
-        if(player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
+        if (player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
         //Stop the Current Track and Go to the Next Track
         await this.msg.channel.send("**Skipping..**");
         await player.player.stopTrack(); //just Stop and go to the next track Simple! (unless i got an error)
@@ -125,7 +125,7 @@ class PlayerControls {
         this.msg = message
         this.guild = guildID;
         this.volume = volume;
-        
+
         //Check if the User is In the Voice Channel
         if (!this.msg.member.voice.channel) return this.msg.channel.send("You Need to Join VoiceChannel First Before Use this Commands!");
         //Get Player that Currently Playing from PlayerHUB
@@ -133,12 +133,12 @@ class PlayerControls {
         //If Player is Not Spawn in that Guild than Refuse the Request
         if (!player) return this.msg.channel.send("I Can't Do That Because Nothing is Currently Playing");
         //if User is Execute this Command from Another VoiceChannel than Refuse it
-        if(player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
+        if (player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
         //If User is Not Input a Number for Volume A.K.A just command say to input the Volume Numbers
-        if(!this.volume || isNaN(this.volume)) return this.msg.channel.send("**Please Type 10 - 250 to Set Volume**");
+        if (!this.volume || isNaN(this.volume)) return this.msg.channel.send("**Please Type 10 - 250 to Set Volume**");
         //Make Sure the Volume is Not to Low and to High
-        if(this.volume < 10) return this.msg.channel.send("You Want to Mute me?");
-        if(this.volume > 250) return this.msg.channel.send("Please Don't Earrape Someone :)");
+        if (this.volume < 10) return this.msg.channel.send("You Want to Mute me?");
+        if (this.volume > 250) return this.msg.channel.send("Please Don't Earrape Someone :)");
         //Change it to Number
         const volumeInput = Number(this.volume);
         //Change it to Decimal Number
@@ -148,6 +148,7 @@ class PlayerControls {
         await this.msg.channel.send(`Set Volume to **${volumeInput}%**`);
 
     }
+
     async pauseMusic(message, guildID) {
         this.msg = message;
         this.guild = guildID;
@@ -159,14 +160,15 @@ class PlayerControls {
         //If Player is Not Spawn in that Guild than Refuse the Request
         if (!player) return this.msg.channel.send("I Can't Do That Because Nothing is Currently Playing");
         //if User is Execute this Command from Another VoiceChannel than Refuse it
-        if(player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
+        if (player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
         //Check if Player is Already Pause or Not
-        if(player.player.paused) return this.msg.channel.send("The Player is **Already Paused!**");
+        if (player.player.paused) return this.msg.channel.send("The Player is **Already Paused!**");
         //Paused the Current Track
         await player.player.setPaused(true);
         await this.msg.channel.send("Player is Now Paused!");
     }
-    async resumeMusic(message,guildID) {
+
+    async resumeMusic(message, guildID) {
         this.msg = message;
         this.guild = guildID;
 
@@ -177,13 +179,14 @@ class PlayerControls {
         //If Player is Not Spawn in that Guild than Refuse the Request
         if (!player) return this.msg.channel.send("I Can't Do That Because Nothing is Currently Playing");
         //if User is Execute this Command from Another VoiceChannel than Refuse it
-        if(player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
+        if (player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
         //Check if Player is Already Resume or Not
-        if(!player.player.paused) return this.msg.channel.send("You Only can use this if the Player is Already Paused!");
+        if (!player.player.paused) return this.msg.channel.send("You Only can use this if the Player is Already Paused!");
         //Resume the Player
         await player.player.setPaused(false);
         await this.msg.channel.send("Resuming Current Song!");
     }
-    
+
 }
+
 module.exports = PlayerControls

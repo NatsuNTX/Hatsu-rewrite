@@ -1,0 +1,82 @@
+{
+  "low": [{
+    "band": 0,
+    "gain": 0.02
+  },
+    {
+      "band": 1,
+      "gain": 0.04
+    },
+    {
+      "band": 2,
+      "gain": 0.02
+    },
+    {
+      "band": 3,
+      "gain": 0.01
+    }],
+  "medium": [{
+    "band": 0,
+    "gain": 0.04
+  },
+    {
+      "band": 1,
+      "gain": 0.02
+    },
+    {
+      "band": 2,
+      "gain": 0.06
+    },
+    {
+      "band": 3,
+      "gain": 0.02
+    }],
+  "high": [{
+    "band": 0,
+    "gain": 0.11
+  },
+    {
+      "band": 1,
+      "gain": 0.09
+    },
+    {
+      "band": 2,
+      "gain": 0.12
+    },
+    {
+      "band": 3,
+      "gain": 0.08
+    }],
+  "ultra": [{
+    "band": 0,
+    "gain": 0.46
+  },
+    {
+      "band": 1,
+      "gain": 1.05
+    },
+    {
+      "band": 2,
+      "gain": 0.24
+    },
+    {
+      "band": 3,
+      "gain": 0.28
+    }],
+  "off": [{
+    "band": 0,
+    "gain": 0
+  },
+    {
+      "band": 1,
+      "gain": 0
+    },
+    {
+      "band": 2,
+      "gain": 0
+    },
+    {
+      "band": 3,
+      "gain": 0
+    }]
+}

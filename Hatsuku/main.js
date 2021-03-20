@@ -16,6 +16,7 @@ const commands = require('../helper/commands/Commands');
 const playerNodes = require('../helper/musicplayer/PlayerNodes');
 const playerHubs = require('../helper/musicplayer/PlayerHUB');
 const playerControl = require('../helper/musicplayer/controls/PlayerControls');
+const playerFilters = require('../helper/musicplayer/filters/PlayerFilters');
 
 /* Main Class */
 class hatsuku extends Client {
@@ -39,6 +40,7 @@ class hatsuku extends Client {
         this.playerNodes = new playerNodes(this,PlayerNodeConfig,PlayerNodeOptions);
         this.playerHubs = new playerHubs(this);
         this.playerControls = new playerControl(this);
+        this.playerFilters = new playerFilters(this);
     }
 
     /* INFO */
