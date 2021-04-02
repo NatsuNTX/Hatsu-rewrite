@@ -1,10 +1,10 @@
 {
   "PlayerNodeConfig": [{
-    "auth": "natsu4455",
-    "host": "127.0.0.1",
-    "name": "localNode",
-    "port": 5871,
-    "secure": false
+    "auth": "Lavalink Password",
+    "host": "Lavalink Host",
+    "name": "Your Lavalink Node Name",
+    "port": 0000,
+    "secure": false //You Get Error If you set this to True and if you forget to remove this comment :)
   }],
   "PlayerNodeOptions": {
     "moveOnDisconnect": false,
@@ -12,6 +12,6 @@
     "reconnectTries": 140,
     "resTimeout": 35000,
     "resumable": false,
-    "userAgent": "KIANA/2.10.5 (CN:NTX-MEI; HATSUKU-BOT)"
+    "userAgent": "KIANA/2.10.5 (Hatsuku-BOT)"
   }
 }
