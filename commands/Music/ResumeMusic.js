@@ -1,6 +1,6 @@
 module.exports = {
     name: "resume",
-    shortname: [""],
+    categories: "music",
     description: "Resume current Track if the Player is On Paused State",
     async execute(msg) {
         //Stop the Music

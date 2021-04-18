@@ -1,5 +1,7 @@
 //Stuff
 const fs = require('fs');
+const {promisify} = require('util');
+const readFolder = promisify(fs.readdir);
 const {Collection} = require('discord.js');
 const {subDirectory} = require('./category.json');
 
@@ -21,22 +23,25 @@ class Commands {
 
     get LoadCommand() {
         subDirectory.forEach(subDir => {
-            fs.readdir(`./commands/${subDir}`, (err, files) => {
-                if (err) {
-                    errorLog.error(`Failed to Load Commands!,${err}`);
-                    throw new Error(`Failed to Load Commands!, ${err}`);
-                }
-                files.forEach(command => {
-                    if (!command.endsWith('.js')) return
-                    const commandFile = require(`../../commands/${subDir}/${command}`);
+            readFolder(`./commands/${subDir}`).then(files =>
+            {
+                for (const command of files)
+                {
+                    if(!command.endsWith('.js')) return;
+                    //Require Commands Files
+                    const cmdFiles = require(`../../commands/${subDir}/${command}`);
                     //Delete Cache (if any)
                     delete require.cache[command]
 
-                    this.client.collection.set(commandFile.name, commandFile);
-                    debugLog.debug(`Loading [${commandFile.name}]`);
-                    infoLog.info("All Commands is Loaded!");
-                });
-            });
+                    //Add the Command Function to Collection
+                    this.client.collection.set(cmdFiles.name, cmdFiles);
+                    debugLog.debug(`Loading [${cmdFiles.name}]`);
+                }
+            }).catch(error =>
+            {
+                errorLog.error(`Failed to Load Commands!,${error}`);
+                throw new Error(`Failed to Load Commands!, ${error}`);
+            })
         });
     }
 
@@ -55,9 +60,33 @@ class Commands {
 
             /* Try to Get the Command from Collection or Command Alias (if any)*/
             const commands = this.client.collection.get(commandWithPrefix) || this.client.collection.find(alias => alias.shortname && alias.shortname.includes(commandWithPrefix));
+            /**
+             *
+             * Under Construction
+             */
+            /*
+            const adminCommands = ["moderation", "admin"]
+            for (let a of adminCommands) {
+                if (commands.categories === a) {
+                    const OwnerGuildID = await ownerDB.findOne({
+                        GuildID: msg.guild.id,
+                    });
+                    if (OwnerGuildID) {
+                        for (let sensitiveCommands of OwnerGuildID.CommandsAccess) {
+                            if (msg.author.id !== OwnerGuildID.GuildOwner) {
+                                return msg.channel.send("You Cannot Use this Commands!").then(c => c.delete({timeout: 5000}));
+                            }
+                        }
+                    }
+                }
+            }
+
+             */
+            //console.log(String(commands.categories));
+
 
             /* If the Command is Not Found in Collection Say Command is Not Available */
-            if (!commands) {
+            if (!commands || commands.categories === undefined) {
                 msg.reply("I Can't Find That Command!");
                 return warnLog.warn(`Cannot Find Command "${commandWithPrefix}"\n` + `Requested From: ${msg.guild.name} With ID:${msg.guild.id}`)
             }

@@ -1,6 +1,9 @@
 //Stuff
 const embed = require('../../helper/Embed/NormalEmbed');
 const {Title,Description} = require('../../mastah/welcome.json');
+const saveToDatabase = require('../../helper/database/sendData');
+const save = new saveToDatabase();
+
 /* Logs */
 const logs = require('../../helper/logger/logger');
 const debugLogs = logs.getLogger("HatsuDebug");
@@ -27,5 +30,9 @@ module.exports = {
             description: Description
         });
         defaultChannel.send(welcome);
+
+        //Save Default Config
+        await save.saveDefaultConfig(guild.ownerID, guild.id, [], guild.name)
+
     }
 }

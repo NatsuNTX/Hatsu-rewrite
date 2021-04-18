@@ -25,23 +25,35 @@ class playerSupport {
             playerInfo.info(`Now Playing:${this.currentTrack.info.title} | Requested [${this.userMessage.author.username}]`);
             const PlayerStartEmbed = new embed({
                 title: ":cd: Music Player",
-                thumbnail: {url: this.client.user.displayAvatarURL({size:1024,format:"webp"})},
+                thumbnail: {url: this.client.user.displayAvatarURL({size: 1024, format: "webp"})},
                 description: "Hatsu Music Player",
-                fields:[{name:":musical_note: Now Playing:", value: `**${this.currentTrack.info.title}** [${this.userMessage.author}]`},
-                    {name:":memo: Next Song:", value: `***${this.queue.length ? this.queue[0].info.title : "Opps.. i just see a dusk in this queue"}***`}],
-                footer:{text: `Volume:${this.player.filters.volume * 100}% | MusicServer:${this.player.voiceConnection.node.name}`, iconURL: this.client.user.displayAvatarURL({size:1024,format:"webp"})}
+                fields: [{
+                    name: ":musical_note: Now Playing:",
+                    value: `**${this.currentTrack.info.title}** [${this.userMessage.author}]`
+                },
+                    {
+                        name: ":memo: Next Song:",
+                        value: `***${this.queue.length ? this.queue[0].info.title : "Opps.. i just see a dusk in this queue"}***`
+                    }],
+                footer: {
+                    text: `Volume:${this.player.filters.volume * 100}% | MusicServer:${this.player.voiceConnection.node.name}`,
+                    iconURL: this.client.user.displayAvatarURL({size: 1024, format: "webp"})
+                }
             });
-            this.textMessage.send(PlayerStartEmbed);
-        });
-        /* Player is Finish to Play */
-        this.player.on("end", () => {
-            this.playTracks().catch(err => {
-                //if Something Happen Just Stop and Log it
-                this.queue.length = 0;
-                this.shutdownPlayer();
-                playerError.error(`Something Wrong While Try to Play A Song!,${err}`);
+            this.textMessage.send(PlayerStartEmbed).then(lastEmbed => {
+                /* Player is Finish to Play */
+                this.player.on("end", () => {
+                    lastEmbed.delete();
+                    this.playTracks().catch(err => {
+                        //if Something Happen Just Stop and Log it
+                        this.queue.length = 0;
+                        this.shutdownPlayer();
+                        playerError.error(`Something Wrong While Try to Play A Song!,${err}`);
+                    });
+                });
             });
         });
+
         /* Can't Play the Next Track */
         this.player.on("trackException", (reason) => {
             const PlayerErrorEmbed = new embed({
@@ -60,24 +72,27 @@ class playerSupport {
         const errorEvent = ["closed", "nodeDisconnect", "error"];
         errorEvent.forEach(errEvent => {
             this.player.on(errEvent, errData => {
-                if(errData instanceof Error || errData instanceof Object) playerError.error(errData);
+                if (errData instanceof Error || errData instanceof Object) playerError.error(errData);
                 this.queue.length = 0 //Remove All Track from Queue
                 this.shutdownPlayer();
             });
         });
-}
-/* Get Player ID if is Still Using By Another Guild */
+    }
+
+    /* Get Player ID if is Still Using By Another Guild */
     get stillPlaying() {
         return this.client.playerHubs.has(this.guild.id);
     }
+
     async playTracks() {
         //If the Hatsuku is Not in Any VoiceChannel or the queue is Empty than just Leave
-        if(!this.stillPlaying || !this.queue.length) return this.shutdownPlayer()
+        if (!this.stillPlaying || !this.queue.length) return this.shutdownPlayer()
         //get First Track from the Queue
         this.currentTrack = this.queue.shift();
         //Lastly Play the Track
         await this.player.playTrack(this.currentTrack.track);
     }
+
     shutdownPlayer() {
         playerWarn.warn(`Shutting Down Music Player from "${this.guild.name}" | ${this.guild.id}`);
         //Remove ALl Track from queue
@@ -90,4 +105,5 @@ class playerSupport {
     }
 
 }
+
 module.exports = playerSupport;

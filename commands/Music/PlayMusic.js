@@ -1,6 +1,6 @@
 module.exports = {
     name: "play",
-    shortname: [""],
+    categories: "music",
     description: "Play Music for You",
     async execute(msg, userInput) {
         let search = userInput.join(" ");

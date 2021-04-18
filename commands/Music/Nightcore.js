@@ -1,6 +1,7 @@
 module.exports = {
     name: "nightcore",
     shortname: ["nc"],
+    categories: "music",
     description: "Change Playing mode from Normal to Nightcore Mode",
     async execute(msg, userInput) {
         //Change Mode to Nightcore

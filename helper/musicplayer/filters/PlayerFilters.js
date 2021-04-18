@@ -94,5 +94,97 @@ class playerFilters {
             return this.msg.channel.send("Please Type ***[ON]*** to Change Playing Mode to **NightCore** or Type ***[OFF]*** to Change Playing Mode to **Normal** \n" + "Note:Playing Mode will Reset to Normal After Hatsuku is Completed ***Playing All song in the Queue!***");
         }
     }
+
+    /**
+     * Change the Player Play Speed
+     * @param speed SpeedLevel 5% - 350%
+     * @param message Discord Message Module
+     * @param GuildID GuildID that Currently Using the Player
+     * @returns {Promise<Message>}
+     */
+    async changePlaybackSpeed(speed,message,GuildID) {
+        this.msg = message;
+        this.guild = GuildID;
+        this.speedLevel = speed;
+
+        //Check if the User is In the Voice Channel
+        if (!this.msg.member.voice.channel) return this.msg.channel.send("You Need to Join VoiceChannel First Before Use this Commands!");
+        //Check if Player is Still PlaySomething
+        const player = this.client.playerHubs.get(this.guild);
+        if (!player) return this.msg.channel.send("I Can't Do That Because Nothing is Currently Playing");
+        //Make sure the User is in the Same Voice Channel as Hatsuku Join
+        if (player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
+        if(!this.speedLevel) return this.msg.channel.send("Please Type ***[5 - 350]*** to Change the Playback Speed!\n" + "Note:to Change Playback Speed Back to Normal just Type ***[100]***");
+        //Convert from Array to Numbers
+        const speedLevel = Number(this.speedLevel);
+        //If the User is Input More than 300, Refuse to Proceed
+        if(speedLevel > 300) return this.msg.channel.send("You Can Use Nightcore Mode Instead, :/");
+        if(speedLevel < 5) return this.msg.channel.send("Just Stop the Music rather Use Very Low Playback Speed!");
+        //Convert from Numbers to Decimal
+        const endSpeedLevel = speedLevel / 100
+        //Set Playback Speed
+        await player.player.setTimescale({speed:endSpeedLevel});
+        this.msg.channel.send(`Set Playback Speed to ***[${speedLevel}%]***`).then(c => c.delete({timeout:10000}));
+
+    }
+
+    /**
+     * Give You 8D Audio Effect (but Without Reverb) [BETA]
+     * @param onOrOff Turn on the Effect or Not
+     * @param message Discord Message Module
+     * @param guildID Guild ID that Currently Using the Player
+     * @returns {Promise<Message>}
+     */
+    async stereoRotate(onOrOff,message, guildID) {
+        this.msg = message;
+        this.guild = guildID;
+        this.onOrOff = onOrOff;
+
+        //Check if the User is In the Voice Channel
+        if (!this.msg.member.voice.channel) return this.msg.channel.send("You Need to Join VoiceChannel First Before Use this Commands!");
+        //Check if Player is Still PlaySomething
+        const player = this.client.playerHubs.get(this.guild);
+        if (!player) return this.msg.channel.send("I Can't Do That Because Nothing is Currently Playing");
+        //Make sure the User is in the Same Voice Channel as Hatsuku Join
+        if (player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
+        //Get Rotation Config
+        const {rotationHz} = require('./rotation/rotation_Config.json');
+        //Convert from Array to String
+        const mode = String(this.onOrOff);
+        //Set 8D Audio Effect
+        if(mode === "on") {
+            await player.player.setRotation(rotationHz);
+            return this.msg.channel.send("8D Audio Effect is Now ***[ON]***").then(c => c.delete({timeout:10000}));
+        } else if(mode === "off") {
+            await player.player.setRotation(0);
+            return this.msg.channel.send("8D Audio Effect is Now ***[OFF]***").then(c => c.delete({timeout:10000}));
+        } else {
+            return this.msg.channel.send("Type **[ON/OFF]** to tell Hatsuku to Use 8D Audio Effect\n" + "Note:Please Use ***Headphone*** before Using this Command");
+        }
+    }
+
+    /**
+     * Try to Isolate a Vocal to Make Karaoke
+     * [BETA] This Feature is still BETA and Maybe it Not Work
+     * @param guildID Guild That Using Player
+     * @param message Discord Message Module
+     * @returns {Promise<MessageEvent>}
+     */
+    async karaokeVer1(guildID, message) {
+        this.msg = message;
+        this.guild = guildID;
+
+        //Check if the User is In the Voice Channel
+        if (!this.msg.member.voice.channel) return this.msg.channel.send("You Need to Join VoiceChannel First Before Use this Commands!");
+        //Check if Player is Still PlaySomething
+        const player = this.client.playerHubs.get(this.guild);
+        if (!player) return this.msg.channel.send("I Can't Do That Because Nothing is Currently Playing");
+        //Make sure the User is in the Same Voice Channel as Hatsuku Join
+        if (player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
+        //Karaoke
+        const {isolateVoice} = require('./karaoke/voiceRange.json');
+        await player.player.setKaraoke(isolateVoice);
+        this.msg.channel.send("Karaoke ***ON***").then(c => c.delete({timeout:5000}));
+    }
 }
 module.exports = playerFilters

@@ -8,6 +8,7 @@
     "dotenv": "^8.2.0",
     "erlpack": "github:discord/erlpack",
     "form-data": "^4.0.0",
+    "globby": "^11.0.3",
     "libsodium-wrappers": "^0.7.9",
     "log4js": "^6.3.0",
     "mongoose": "^5.11.18",

@@ -1,6 +1,6 @@
 module.exports = {
     name: "stop",
-    shortname: [""],
+    categories: "music",
     description: "Stop Music that Currently Play",
     async execute(msg) {
         //Stop the Music
