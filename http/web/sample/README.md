@@ -5,4 +5,4 @@
 ![SYS_Preview](https://raw.githubusercontent.com/NatsuNTX/Hatsu-rewrite/development/http/web/sample/info%20system.png)
 
 ## Note:
-For The Background and Profile its jus for a **demo** You may need to Set Your own Background Image
+For The Background and Profile its just for a **demo** You may need to Set Your own Background Image
