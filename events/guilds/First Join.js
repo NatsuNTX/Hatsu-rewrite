@@ -1,8 +1,7 @@
 //Stuff
 const embed = require('../../helper/Embed/NormalEmbed');
 const {Title,Description} = require('../../mastah/welcome.json');
-const saveToDatabase = require('../../helper/database/sendData');
-const save = new saveToDatabase();
+const {FIRST_JOIN} = require('../../mastah/expression.json');
 
 /* Logs */
 const logs = require('../../helper/logger/logger');
@@ -27,12 +26,9 @@ module.exports = {
         });
         const welcome = new embed({
             title: Title,
-            description: Description
+            description: Description,
+            image: {url:FIRST_JOIN}
         });
         defaultChannel.send(welcome);
-
-        //Save Default Config
-        await save.saveDefaultConfig(guild.ownerID, guild.id, [], guild.name)
-
     }
 }

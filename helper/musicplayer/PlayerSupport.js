@@ -20,6 +20,8 @@ class playerSupport {
         this.userMessage = opts.userMessage;
         this.currentTrack = null;
 
+        this.lastSendEmbed = [];
+
         /* Player Start to Play */
         this.player.on("start", () => {
             playerInfo.info(`Now Playing:${this.currentTrack.info.title} | Requested [${this.userMessage.author.username}]`);
@@ -40,19 +42,19 @@ class playerSupport {
                     iconURL: this.client.user.displayAvatarURL({size: 1024, format: "webp"})
                 }
             });
-            this.textMessage.send(PlayerStartEmbed).then(lastEmbed => {
-                /* Player is Finish to Play */
-                this.player.on("end", () => {
-                    lastEmbed.delete();
-                    this.playTracks().catch(err => {
-                        //if Something Happen Just Stop and Log it
-                        this.queue.length = 0;
-                        this.shutdownPlayer();
-                        playerError.error(`Something Wrong While Try to Play A Song!,${err}`);
-                    });
+            this.textMessage.send(PlayerStartEmbed).then(c => this.lastSendEmbed[0] = c);
+        });
+
+            /* Player is Finish to Play */
+            this.player.on("end", () => {
+                this.textMessage.messages.delete(this.lastSendEmbed[0]);
+                this.playTracks().catch(err => {
+                    //if Something Happen Just Stop and Log it
+                    this.queue.length = 0;
+                    this.shutdownPlayer();
+                    playerError.error(`Something Wrong While Try to Play A Song!,${err}`);
                 });
             });
-        });
 
         /* Can't Play the Next Track */
         this.player.on("trackException", (reason) => {

@@ -114,9 +114,10 @@ class playerFilters {
         if (!player) return this.msg.channel.send("I Can't Do That Because Nothing is Currently Playing");
         //Make sure the User is in the Same Voice Channel as Hatsuku Join
         if (player.player.voiceConnection.voiceChannelID !== this.msg.member.voice.channelID) return this.msg.channel.send("**You Need to be In the Same Voice Channel!**");
-        if(!this.speedLevel) return this.msg.channel.send("Please Type ***[5 - 350]*** to Change the Playback Speed!\n" + "Note:to Change Playback Speed Back to Normal just Type ***[100]***");
+        //if(!this.speedLevel) return this.msg.channel.send("Please Type ***[5 - 350]*** to Change the Playback Speed!\n" + "Note:to Change Playback Speed Back to Normal just Type ***[100]***");
         //Convert from Array to Numbers
         const speedLevel = Number(this.speedLevel);
+        if(!speedLevel || speedLevel === '') return this.msg.channel.send("Please Type ***[5 - 350]*** to Change the Playback Speed!\n" + "Note:to Change Playback Speed Back to Normal just Type ***[100]***")
         //If the User is Input More than 300, Refuse to Proceed
         if(speedLevel > 300) return this.msg.channel.send("You Can Use Nightcore Mode Instead, :/");
         if(speedLevel < 5) return this.msg.channel.send("Just Stop the Music rather Use Very Low Playback Speed!");

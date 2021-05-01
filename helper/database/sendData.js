@@ -1,67 +1,130 @@
 'use strict'
 //Database Model
-const admin = require('./models/admin');
-const moderator = require('./models/moderator');
+const prefix = require('./models/Prefix');
+const warn = require('./models/Warn Data');
 
 /* Loggers */
 const logs = require('../logger/logger');
-const infLogs = logs.getLogger('HatsuInfo');
-const errLogs = logs.getLogger('HatsuError');
-const warnLogs = logs.getLogger('HatsuWarn');
 const debugLogs = logs.getLogger('HatsuDebug');
+const errorLogs = logs.getLogger("HatsuError");
 
 class sendData {
-    async saveDefaultConfig(ownerID, GuildID, adminRoles, GuildNames) {
-        this.owner = ownerID;
-        this.guildId = GuildID;
-        this.adminRole = adminRoles;
-        this.serverName = GuildNames
+    async setPrefix(newPrefix, GuildID, GuildName) {
+        this.prefix = newPrefix;
+        this.guild = GuildID;
+        this.guildName = GuildName;
 
-        //Set Default Admin
-        //Check if the Guild ID is Exist
-        //if Exist than rewrite with the new one
-        const guildInBase = await admin.findOne({GuildID:this.guildId});
-        if(guildInBase) {
-            warnLogs.warn('Found Guild ID in Database, Replacing With the New One');
-            debugLogs.debug(`Saving Data to Database!\n Data:${JSON.stringify([this.ownerID, this.guildID, this.adminRole],null,2)}`);
-            admin.deleteMany({GuildID: this.guildId}).catch(err => errLogs.error(`Failed to Remove Old Data from Database\n Reason:${err}`));
-            const newData = admin({
-                GuildID: this.guildId,
-                GuildOwner:this.owner,
-                GuildName: this.serverName,
-                AdminRoles: this.adminRole
-            });
-            newData.save().then(dataInBase => {
-                //console.log(dataInBase)
-                if (dataInBase.GuildID === this.guildId) {
-                    return infLogs.info("Successfully Save New Admin Config to Database!");
-                } else if (dataInBase === '' || dataInBase.GuildID === '') return errLogs.error("Failed to Save Data to DataBase");
+        //Make Sure to Check if Prefix Length Is Not More than 3 Character
+        if (this.prefix.length > 3) return {
+            "Code": -4,
+            "Message": "Prefix Character its Should Not More than 3 Character"
+        }
+        //OK This Part I'm Actually Lost What Iam Gonna do in this Scope
+
+        //Find Guild ID from Prefix Model
+        //If Found than Overwrite the Old Prefix Otherwise Make new Data with new Custom Prefix
+        const guildData = await prefix.findOne({_id: this.guild});
+        if (guildData) {
+            debugLogs.debug(`Overwrite Prefix With New Prefix\n NewPrefix:${this.prefix}`);
+            prefix.updateOne({_id: this.guild}, {
+                id_: this.guild,
+                GuildName: this.guildName,
+                GuildPrefix: this.prefix
+            }, {strict: true}, err => {
+                if (err) {
+                    return {
+                        "Code": -2,
+                        "Message": `Failed to Overwrite Old Prefix with The New One, Reason:${err}`
+                    }
+                }
             })
         } else {
-            const newData = admin({
-                GuildID: this.guildId,
-                GuildOwner:this.owner,
-                GuildName: this.serverName,
-                AdminRoles: this.adminRole
-            });
-            newData.save().then(dataInBase => {
-                //console.log(dataInBase)
-                if (dataInBase.GuildID === this.guildId) {
-                    return infLogs.info("Successfully Save Admin Config to Database!");
-                } else if (dataInBase === '' || dataInBase.GuildID === '') return errLogs.error("Failed to Save Data to DataBase");
-            });
+            debugLogs.debug(`Saving New Prefix\n NewPrefix:${this.prefix}`);
+            try {
+                await prefix.create({_id: this.guild, GuildName: this.guildName, GuildPrefix: this.prefix});
+            } catch (err) {
+                return {
+                    "Code": -2,
+                    "Message": `Failed to Save New Prefix Data, Reason:${err}`
+                }
+            }
         }
     }
-    deleteDataWhenLeave(GuildID) {
-        this.guildID = GuildID;
-        //Delete Admin Data
-        admin.deleteMany({GuildID: this.guildID}, {}, (err) => {
-            if (err) return errLogs.error(`Cannot Delete Admin Data From Database\n Reason:${err}`)
+
+    async setWarnData(GuildID, GuildName, UserID, Reason) {
+        this.guild = GuildID;
+        this.warnUser = UserID;
+        this.warnReason = Reason;
+
+        //Make Sure User is Input a The Warn User ID and The Reason
+        if(!this.warnUser && !this.warnReason) return {
+            Code: -15,
+            Message: "Make sure You Input The Warn UserID With the Reason!"
+        }
+        //Get WarnData from Database With the GuildID
+        const warnData = await warn.find({_id:this.guild});
+        //If Hatsuku Found A Data that mean there is a User is Already Get Warn
+
+        /**
+         * Next Step:
+         * Check if UserId is Match With the New UserId (in this case is user getting a warn)
+         * if Match than add 1 point
+         * else its mean that is a new User soo.. create a new one
+         * Note:
+         * Before Implement Step Above Wee Need to Check if that User is Reach the Warn Limit
+         * if User is Already Reach First Limit Than Kick The User
+         * or if User is Already Reach Final Limit Than Ban The User
+         */
+
+        if(warnData || !warnData) {
+            if(warnData.WarnUserID === this.warnUser) {
+                let warnCound = warnData.WarnUserCount
+                let warnReason = warnData.WarnReason
+                try {
+                    warn.updateOne({_id: this.guild}, {
+                        WarnReason: warnReason.push(this.warnReason),
+                        WarnUserCount: warnCound++
+                    });
+                } catch (err) {
+                    return  {
+                        Code: -12,
+                        Message: `Something Wrong When Try To Update A Data\n Reason:${err}`
+                    }
+                }
+            } else if(!warnData && warnData.WarnUserID !== this.warnUser){
+                try {
+                    await warn.create({
+                        _id: this.guild,
+                        GuildName: GuildName,
+                        WarnUserID: this.warnUser,
+                        WarnReason: Array(this.warnReason),
+                        WarnUserCount: 1
+                    });
+                } catch (err) {
+                    return  {
+                        Code: -12,
+                        Message: `Something Wrong When Try To Update A Data\n Reason:${err}`
+                    }
+                }
+            }
+        }
+
+    }
+
+    async DeleteAllSaveData(GuildID) {
+        this.guild = GuildID;
+        //Like the Method Name Remove All Custom Data for Specific Guild
+        //Very Useful If The Guild Owner Kick the Bot From Guild So No Data its Left Behind
+
+        debugLogs.debug(`Removing All Data for GuildID:${this.guild}`);
+        //Delete Prefix Data From Database
+        prefix.deleteOne({_id: this.guild}, null, err => {
+            if (err) return errorLogs.error(`Cannot Remove Prefix Data From Database!, Reason:${err}`);
         });
-        //Delete Moderator Data
-        moderator.deleteMany({GuildID: this.guildID}, {}, (err) => {
-            if (err) return errLogs.error(`Cannot Delete Moderator Data From Database\n Reason:${err}`)
+        warn.deleteOne({_id: this.guild}, null, err => {
+            if (err) return errorLogs.error(`Cannot Remove Warn Data From Database!, Reason:${err}`)
         });
     }
 }
+
 module.exports = sendData

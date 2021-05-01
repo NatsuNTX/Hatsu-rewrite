@@ -1,7 +1,7 @@
 module.exports = {
     name: "hello",
     shortname: ["hi"],
-    categories: "testing",
+    categories: "admin",
     description: "Say FeedBack",
     execute(msg) {
         msg.reply("HI How are You?");

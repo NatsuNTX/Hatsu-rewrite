@@ -12,7 +12,7 @@ function MyActivity(client) {
 
     /* Activity Part */
     debugLogs.debug('Starting Hatsuku Activity');
-    debugLogs.debug('Set Activity With Given Setting\n' + `${JSON.stringify(activity)}`);
+    debugLogs.debug('Set Activity With Given Setting\n' + `${JSON.stringify(activity, null, 3)}`);
 
     try {
         if(isStream) {
@@ -20,13 +20,13 @@ function MyActivity(client) {
             this.bot.user.setActivity(`[${process.env.PREFIX}help] | Online!`, {type:"STREAMING",url:`${streamLink}`});
             setInterval(() => {
                 this.bot.user.setActivity(`[${process.env.PREFIX}help] | ${chooseRandomWord(ActivityList)}`, {type:"STREAMING",url:`${streamLink}`});
-            }, 30000);
+            }, 150000);
         } else {
             this.bot.user.setStatus(`${Status}`);
             this.bot.user.setActivity(`[${process.env.PREFIX}help] | Online!`);
             setInterval(() => {
                 this.bot.user.setActivity(`[${process.env.PREFIX}help] | ${chooseRandomWord(ActivityList)}`);
-            },30000);
+            },150000);
         }
     } catch (e) {
         errorLogs.error(`Cannot Load Activity, ${e}`);

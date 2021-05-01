@@ -3,6 +3,7 @@
  * I Did this because to Make the Code inside Commands Files Short, cause the Old One
  * is Very Messy or Maybe i Always write messy code cuz i'm still beginner :P
  */
+
 class PlayerControls {
     constructor(client) {
         this.client = client;
@@ -185,6 +186,17 @@ class PlayerControls {
         //Resume the Player
         await player.player.setPaused(false);
         await this.msg.channel.send("Resuming Current Song!");
+    }
+    async siteInfoPlayer(message, GuildID) {
+        const getVideo = require('../info/Video Info');
+        //Get Player that Currently Playing from PlayerHUB
+        const player = this.client.playerHubs.get(GuildID);
+
+        if(!player) return this.msg.channel.send("I Can't Do That Because Nothing is Currently Playing");
+        
+        //console.log(player)
+
+        await getVideo(player.currentTrack.info.uri, message, player);
     }
 
 }

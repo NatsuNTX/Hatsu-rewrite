@@ -13,6 +13,6 @@ module.exports = {
     async run(guild) {
         infoLogs.info(`Hatsuku is Leave from ${guild.name} With ID "${guild.id}" Maybe I Got Kick For Some Reason :(`);
         debugLogs.debug(`Hatsuku get Remove from ${guild.name} | ${guild.id} Removing Guild Data From Database`);
-        database.deleteDataWhenLeave(guild.id);
+        await database.DeleteAllSaveData(guild.id);
     }
 }
