@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "@discordjs/builders": "^0.6.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "bufferutil": "^4.0.3",
+    "discord-api-types": "^0.23.1",
+    "discord.js": "^13.1.0",
+    "dotenv": "^10.0.0",
+    "kurasuta": "^3.0.1",
+    "npmlog": "^5.0.1",
+    "shoukaku": "github:Deivu/Shoukaku#next",
+    "utf-8-validate": "^5.0.5",
+    "wa2000": "github:Deivu/Walther-WA2000"
+  },
+  "name": "hatsuku",
+  "version": "4.1.2",
+  "main": "index.js",
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  },
+  "scripts": {
+    "dev": "nodemon index.js --debug"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
