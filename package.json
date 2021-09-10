@@ -22,7 +22,7 @@
     "dev": "nodemon index.js --debug"
   },
   "keywords": [],
-  "author": "",
+  "author": "NatsuNTX",
   "license": "ISC",
-  "description": ""
+  "description": "Rewrite Version of Hatsu V1"
 }

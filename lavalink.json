@@ -1,0 +1,11 @@
+{
+  "lavalinkOptions": {
+    "resumable": true,
+    "resumableTimeout": 120000,
+    "reconnectTries": 20,
+    "moveOnDisconnect": false,
+    "restTimeout": 30000,
+    "reconnectInterval": 15000,
+    "userAgent": "Atsumi/4.1.2 (Hatsu-BOT)"
+  }
+}

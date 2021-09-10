@@ -3,4 +3,5 @@ slash.json
 .env
 README.MD
 package-lock.json
-test
+src/command/test
+Lavalink/*
