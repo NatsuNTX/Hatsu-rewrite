@@ -1,4 +1,5 @@
 const log = require('npmlog');
+const log2file = require('log-to-file');
 
 class HatsuLogger {
     constructor() {
@@ -18,15 +19,24 @@ class HatsuLogger {
     /* Logger Methods */
     debugLog(prefix, message) {
         log.verbose(prefix, message);
+        this.writeToFile(JSON.stringify({"DEBUG": `${prefix}:${message}`}));
     }
     warnLog(prefix, message) {
         log.warn(prefix, message);
+        this.writeToFile(JSON.stringify({"WARN": `${prefix}:${message}`}));
     }
     errorLog(prefix, message) {
         log.error(prefix, message);
+        this.writeToFile(JSON.stringify({"ERROR": `${prefix}:${message}`}));
     }
     infoLog(prefix, message) {
         log.info(prefix, message);
+        this.writeToFile(JSON.stringify({"INFO": `${prefix}:${message}`}));
+    }
+    writeToFile(object) {
+        this.conoutput = []
+        this.conoutput = object;
+        log2file(this.conoutput.toString(), "Hatsu.log");
     }
 }
 exports.HatsuLogger = HatsuLogger

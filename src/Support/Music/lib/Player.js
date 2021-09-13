@@ -24,28 +24,39 @@ class HatsuPlayer {
 
     get _playerEvent() {
         /* Shoukaku Start Events */
-        this.player.on("start", (data) => {
+        this.player.on("start", () => {
             const plymsg = new HatsuEmbed({
                 title: ":cd: Hatsu Player",
                 thumbnail: {url: this.client.user.displayAvatarURL({size: 1024, format: "png"})},
                 fields: [{
                     name: ":musical_note: Now Playing:",
-                    value: this.nowPlay.info.title
+                    value: `**${this.nowPlay.info.title}**`,
+                    inline: false
                 },
                     {
-                        name: ":speaker: Volume:",
-                        value: `${(this.player.filters.volume * 100).toFixed(2)}%`
-                    }
-                    /*
+                      name: ':file_folder: Source/Uploader:',
+                      value: `**${this.nowPlay.info.sourceName}/${this.nowPlay.info.author}**`,
+                        inline: false
+                    },
                     {
-                        name: ":satellite: Music Server",
-                        value: this.player.voiceConnection?.node.name
-                    } */]
+                        name: ":speaker: Volume:",
+                        value: `***${(this.player.filters.volume * 100).toFixed(2)}%***`,
+                        inline: true
+                    },
+                    {
+                        name: ":satellite: Music Server:",
+                        value: `***${this.player.connection.node.name}***`,
+                        inline:true
+                    }],
+                image:{url:`https://img.youtube.com/vi/${this.nowPlay.info.identifier}/maxresdefault.jpg`}
             });
             return this.interactMessage.channel.send({embeds: [plymsg]}).then(c => this.playerEmbed = c);
         });
         /* Shoukaku End Events */
         this.player.on("end", () => {
+            if(this.isLoop === "one") this.queue.unshift(this.nowPlay);
+            if(this.isLoop === "all") this.queue.push(this.nowPlay);
+
             this.interactMessage.channel.messages.delete(this.playerEmbed);
             if(!this.queue.length) {
                 return this.destroyPlayer();
@@ -88,12 +99,7 @@ class HatsuPlayer {
         });
     }
 
-    get _isplaying() {
-        return this.client.playermaps.get(this.guild.id);
-    }
-
     async playThatTracks() {
-        if (!this._isplaying || !this.queue.length) return //stop()
         this.nowPlay = this.queue.shift();
         await this.player.playTrack(this.nowPlay.track);
     }

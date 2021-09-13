@@ -14,6 +14,7 @@ class ShoukakuNodes extends Shoukaku {
     _shoukakuEvents() {
         this.on('ready', (name) => {
             hatsuLogger.infoLog("MUSICNODE" , `Connected to ${name} on port ${process.env.LAVALINK_PORT}`);
+            this.clients.playerNode = 0
         });
         this.on('debug', (name, info) => {
             hatsuLogger.debugLog("MUSICNODE", `${name}:${info}`);
