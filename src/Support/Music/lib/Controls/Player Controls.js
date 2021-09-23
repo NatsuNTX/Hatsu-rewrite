@@ -57,27 +57,50 @@ class PlayerControls {
     async loopTracks(interaction, mode) {
         this.interact = interaction;
 
-        const player = this.interact.client.playermaps.get(this.interact.guild.id);
-        if(!player) return this.interact.editReply("I Can't do that because nothing is Playing");
-        if(player.player.connection.channelId !== this.interact.member.voice.channelId) return this.interact.editReply("You need in the Same Voice Channel as me!");
+        const p_maps = this.interact.client.playermaps.get(this.interact.guild.id);
+        if(!p_maps) return this.interact.editReply("I Can't do that because nothing is currently playing!");
+        if(p_maps.player.connection.channelId !== this.interact.member.voice.channelId) return this.interact.editReply("You need in the Same Voice Channel as me!");
 
         switch (mode) {
             case "one":
-                if(mode === player.isLoop) return this.interact.editReply("Is Already Looping Current track!");
-                player.isLoop = mode;
+                if(mode === p_maps.isLoop) return this.interact.editReply("Is Already Looping Current track!");
+                p_maps.isLoop = mode;
                 await this.interact.editReply("Looping Current Track!");
                 break
             case "all":
-                if(mode === player.isLoop) return this.interact.editReply("Is Already Looping All queue!");
-                player.isLoop = mode
+                if(mode === p_maps.isLoop) return this.interact.editReply("Is Already Looping All queue!");
+                p_maps.isLoop = mode
                 await this.interact.editReply("Looping All track in the queue!");
                 break
             case "off":
-                if(mode === player.isLoop) return this.interact.editReply("The Loop Mode is Already Off!");
-                player.isLoop = mode
+                if(mode === p_maps.isLoop) return this.interact.editReply("The Loop Mode is Already Off!");
+                p_maps.isLoop = mode
                 await this.interact.editReply("Loop is now Off");
                 break
         }
+    }
+    async volumeTracks(interaction, volume) {
+        this.interact = interaction;
+        const p_maps = this.interact.client.playermaps.get(this.interact.guild.id);
+        if(!p_maps) return this.interact.editReply("I Can't do that because nothing is currently playing!");
+        if(p_maps.player.connection.channelId !== this.interact.member.voice.channelId) return this.interact.editReply("You need in the Same Voice Channel as me!");
+
+        if(volume < 5) return this.interact.editReply("You can use Mute Command to do that!");
+        if(volume > 500) return this.interact.editReply("This is the Limit you can do Ear rape!");
+
+        p_maps.player.setVolume((volume / 100));
+        return this.interact.editReply(`Volume is now set to ${volume}%`);
+    }
+    async stopTracks(interaction) {
+        this.interact = interaction;
+        const p_maps = this.interact.client.playermaps.get(this.interact.guild.id);
+        if(!p_maps) return this.interact.editReply("I Can't do that because nothing is currently playing!");
+        if(p_maps.player.connection.channelId !== this.interact.member.voice.channelId) return this.interact.editReply("You need in the Same Voice Channel as me!");
+
+        await this.interact.editReply(":stop_button: Stopping the Player");
+        p_maps.isLoop = "off";
+        p_maps.queue.length = 0
+        return p_maps.player.stopTrack();
     }
 }
 exports.PlayerControls = PlayerControls

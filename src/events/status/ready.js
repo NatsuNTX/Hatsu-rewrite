@@ -1,6 +1,7 @@
 const os = require('os');
 const {version} = require('../../../package.json');
 const {mainsplash, secondarysplash} = require('../../../splash.json');
+const activity = require('../../Support/Activity');
 
 /* Logger */
 const {hatsuLogger} = require('../../Support/Logger');
@@ -8,7 +9,8 @@ const {hatsuLogger} = require('../../Support/Logger');
 module.exports = {
     events: "ready",
     once: true,
-    run(client) {
+    async run (client) {
+        await activity(client);
         hatsuLogger.infoLog("", mainsplash);
         hatsuLogger.infoLog("", secondarysplash);
         hatsuLogger.infoLog("Hatsu", "Hatsu is Running!");

@@ -2,6 +2,7 @@
   "dependencies": {
     "@discordjs/builders": "^0.6.0",
     "@discordjs/rest": "^0.1.0-canary.0",
+    "azuma": "^1.1.0",
     "bufferutil": "^4.0.3",
     "discord-api-types": "^0.23.1",
     "discord.js": "^13.1.0",
@@ -10,8 +11,7 @@
     "log-to-file": "^2.0.2",
     "npmlog": "^5.0.1",
     "shoukaku": "github:Deivu/Shoukaku#next",
-    "utf-8-validate": "^5.0.5",
-    "wa2000": "github:Deivu/Walther-WA2000"
+    "utf-8-validate": "^5.0.5"
   },
   "name": "hatsuku",
   "version": "4.1.2",
@@ -20,7 +20,8 @@
     "nodemon": "^2.0.12"
   },
   "scripts": {
-    "dev": "nodemon index.js --debug"
+    "dev": "nodemon index.js --debug",
+    "hatsu": "node index.js"
   },
   "keywords": [],
   "author": "NatsuNTX",

@@ -7,7 +7,7 @@ module.exports = {
         .addStringOption(options => options.setName("loop_mode").setDescription("Loop Current Track or All Song")
             .setRequired(true).addChoice("current_track", "one").addChoice("all_queue", "all").addChoice("off", "off")),
     async run(interaction) {
-        await interaction.deferReply({ephemeral: true});
+        await interaction.deferReply();
         const choices = interaction.options.getString("loop_mode");
         await interaction.client.playermaps.playerControl.loopTracks(interaction, choices);
     }

@@ -1,5 +1,5 @@
 require('dotenv').config()
-const Walther = require('wa2000');
+const { Azuma } = require("azuma");
 const path = require('path');
 const {Intents} = require('discord.js');
 const {HatsuClient} = require('./src/Hatsu/HatsuClient');
@@ -25,16 +25,12 @@ const rlimit = {
     requestOffset: 500
 }
 
-const shardlimiter = new Walther(path.join(__dirname, '/src/Base Cluster.js'), shardOptions, rlimit);
-
-shardlimiter.on('debug', msg => {
-    hatsuLogger.debugLog("Shard", msg);
-});
+const azuma = new Azuma(path.join(__dirname, '/src/Base Cluster.js'), shardOptions, rlimit);
 if (!existsSync('slash.json')) {
     registerSlashCommand.register().then(res => {
         writeFileSync('slash.json', JSON.stringify(res));
         if (res.isloaded) {
-            return shardlimiter.spawn();
+            return azuma.spawn();
         } else {
             hatsuLogger.errorLog("Hatsu", "Cannot Run the Bot Because the Command is Not Yet Register!");
             process.exit(1);
@@ -43,9 +39,25 @@ if (!existsSync('slash.json')) {
 } else {
     const a = require('./slash.json');
     if(a.isloaded) {
-        return shardlimiter.spawn();
+        return azuma.spawn();
     } else {
         hatsuLogger.errorLog("Hatsu", "Cannot Run the Bot Because the Command is Not Yet Register!");
         process.exit(1);
     }
 }
+
+/* Azuma Events */
+azuma.on('debug', msg => {
+    hatsuLogger.debugLog("Azuma", msg);
+});
+azuma.rest.on("onTooManyRequest", (info) => {
+    hatsuLogger.warnLog("Azuma", `Ohh...no i Got 429!, Please stop the bot Right now\n ` +
+        `Otherwise you will get ban!`);
+    hatsuLogger.warnLog("Azuma", `Request:${info.request}\nResponse: ${info.response}`);
+});
+azuma.rest.on("onRequest", info => {
+    hatsuLogger.debugLog("Azuma", `Azuma[Hatsu] --> Discord:${info.request}`);
+});
+azuma.rest.on("onResponse", info => {
+    hatsuLogger.debugLog("Azuma", `Azuma[Hatsu] <--- Discord:${info.response}`);
+});
