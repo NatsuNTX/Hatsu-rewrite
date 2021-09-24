@@ -1,5 +1,6 @@
 const {hatsuLogger} = require('../../Logger');
 const {HatsuEmbed} = require('../../Embeds');
+const {hatsuMailer} = require('../../mail sender');
 
 class HatsuPlayer {
     /**
@@ -40,7 +41,7 @@ class HatsuPlayer {
                     },
                     {
                         name: ":speaker: Volume:",
-                        value: `***${(this.player.filters.volume * 100).toFixed(2)}%***`,
+                        value: `***${(this.player.filters.volume * 100).toFixed(0)}%***`,
                         inline: true
                     },
                     {
@@ -83,7 +84,7 @@ class HatsuPlayer {
             });
         });
         /* Shoukaku Lib Error */
-        this.player.on("error", error => {
+        this.player.on("error", async error => {
             hatsuLogger.errorLog("Hatsu Player", `Internal Error Accoured!\n Error:${error}\n Music Player is Now Disable!`);
             const err = new HatsuEmbed({
                 title: ":warning: Library Error",
@@ -91,6 +92,7 @@ class HatsuPlayer {
                     "for now i will disable the music command to prevent further error, iam so sorry :(```"
             });
             this.client.playerNode = -2
+            await hatsuMailer.sendError(error, this.guild, Date.now())
             return this.interactMessage.channel.send({embeds: [err]}).then(c => {
                 setTimeout(() => {
                     c.delete()
