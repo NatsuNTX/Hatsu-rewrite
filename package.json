@@ -8,7 +8,9 @@
     "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
     "kurasuta": "^3.0.1",
+    "libsodium-wrappers": "^0.7.9",
     "log-to-file": "^2.0.2",
+    "nodemailer": "^6.6.5",
     "npmlog": "^5.0.1",
     "shoukaku": "github:Deivu/Shoukaku#next",
     "utf-8-validate": "^5.0.5"
